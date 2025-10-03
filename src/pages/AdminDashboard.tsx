@@ -4,6 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { GraduationCap, LogOut, BookOpen, Video, Users, FileQuestion, Plus } from 'lucide-react';
+import { UploadBookDialog } from '@/components/admin/UploadBookDialog';
+import { UploadVideoDialog } from '@/components/admin/UploadVideoDialog';
+import { CreateCourseDialog } from '@/components/admin/CreateCourseDialog';
 
 export default function AdminDashboard() {
   const { user, signOut } = useAuth();
@@ -15,6 +18,10 @@ export default function AdminDashboard() {
     totalStudents: 0,
     totalQuizzes: 0,
   });
+  
+  const [uploadBookOpen, setUploadBookOpen] = useState(false);
+  const [uploadVideoOpen, setUploadVideoOpen] = useState(false);
+  const [createCourseOpen, setCreateCourseOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +57,26 @@ export default function AdminDashboard() {
 
     fetchData();
   }, [user]);
+
+  const refreshStats = async () => {
+    if (!user) return;
+    const { data: booksData } = await supabase.from('books').select('id');
+    const { data: videosData } = await supabase.from('videos').select('id');
+    const { data: coursesData } = await supabase.from('courses').select('id');
+    const { data: studentsData } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('role', 'student');
+    const { data: quizzesData } = await supabase.from('quizzes').select('id');
+
+    setStats({
+      totalBooks: booksData?.length || 0,
+      totalVideos: videosData?.length || 0,
+      totalCourses: coursesData?.length || 0,
+      totalStudents: studentsData?.length || 0,
+      totalQuizzes: quizzesData?.length || 0,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -153,21 +180,32 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Button className="h-auto py-6 flex flex-col items-center gap-2">
+              <Button 
+                className="h-auto py-6 flex flex-col items-center gap-2"
+                onClick={() => setUploadBookOpen(true)}
+              >
                 <Plus className="h-8 w-8" />
                 <div className="text-center">
                   <p className="font-semibold">Upload Book</p>
                   <p className="text-sm opacity-90">Add new book material</p>
                 </div>
               </Button>
-              <Button variant="secondary" className="h-auto py-6 flex flex-col items-center gap-2">
+              <Button 
+                variant="secondary" 
+                className="h-auto py-6 flex flex-col items-center gap-2"
+                onClick={() => setUploadVideoOpen(true)}
+              >
                 <Plus className="h-8 w-8" />
                 <div className="text-center">
                   <p className="font-semibold">Upload Video</p>
                   <p className="text-sm opacity-90">Add video lesson</p>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-center gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-center gap-2"
+                onClick={() => setCreateCourseOpen(true)}
+              >
                 <Plus className="h-8 w-8" />
                 <div className="text-center">
                   <p className="font-semibold">Create Course</p>
@@ -198,6 +236,22 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        <UploadBookDialog 
+          open={uploadBookOpen} 
+          onOpenChange={setUploadBookOpen}
+          onSuccess={refreshStats}
+        />
+        <UploadVideoDialog 
+          open={uploadVideoOpen} 
+          onOpenChange={setUploadVideoOpen}
+          onSuccess={refreshStats}
+        />
+        <CreateCourseDialog 
+          open={createCourseOpen} 
+          onOpenChange={setCreateCourseOpen}
+          onSuccess={refreshStats}
+        />
       </main>
     </div>
   );
