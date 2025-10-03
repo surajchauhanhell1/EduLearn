@@ -164,21 +164,33 @@ export default function StudentDashboard() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-start gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-start gap-2"
+                onClick={() => navigate('/courses')}
+              >
                 <GraduationCap className="h-8 w-8 text-primary" />
                 <div className="text-left">
                   <p className="font-semibold">Browse Courses</p>
                   <p className="text-sm text-muted-foreground">Explore all available courses</p>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-start gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-start gap-2"
+                onClick={() => navigate('/books')}
+              >
                 <BookOpen className="h-8 w-8 text-secondary" />
                 <div className="text-left">
                   <p className="font-semibold">My Library</p>
                   <p className="text-sm text-muted-foreground">Access books and materials</p>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-start gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-start gap-2"
+                onClick={() => navigate('/videos')}
+              >
                 <Video className="h-8 w-8 text-accent" />
                 <div className="text-left">
                   <p className="font-semibold">Video Lessons</p>
