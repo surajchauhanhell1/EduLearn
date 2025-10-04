@@ -7,6 +7,7 @@ import { GraduationCap, LogOut, BookOpen, Video, Users, FileQuestion, Plus } fro
 import { UploadBookDialog } from '@/components/admin/UploadBookDialog';
 import { UploadVideoDialog } from '@/components/admin/UploadVideoDialog';
 import { CreateCourseDialog } from '@/components/admin/CreateCourseDialog';
+import { CreateQuizDialog } from '@/components/admin/CreateQuizDialog';
 
 export default function AdminDashboard() {
   const { user, signOut } = useAuth();
@@ -22,6 +23,7 @@ export default function AdminDashboard() {
   const [uploadBookOpen, setUploadBookOpen] = useState(false);
   const [uploadVideoOpen, setUploadVideoOpen] = useState(false);
   const [createCourseOpen, setCreateCourseOpen] = useState(false);
+  const [createQuizOpen, setCreateQuizOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,7 +214,11 @@ export default function AdminDashboard() {
                   <p className="text-sm opacity-90">Build new course</p>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-center gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-center gap-2"
+                onClick={() => setCreateQuizOpen(true)}
+              >
                 <Plus className="h-8 w-8" />
                 <div className="text-center">
                   <p className="font-semibold">Create Quiz</p>
@@ -250,6 +256,11 @@ export default function AdminDashboard() {
         <CreateCourseDialog 
           open={createCourseOpen} 
           onOpenChange={setCreateCourseOpen}
+          onSuccess={refreshStats}
+        />
+        <CreateQuizDialog 
+          open={createQuizOpen} 
+          onOpenChange={setCreateQuizOpen}
           onSuccess={refreshStats}
         />
       </main>

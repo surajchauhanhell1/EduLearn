@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
-  allowedRoles?: ('admin' | 'student')[];
+  allowedRoles?: ('admin' | 'student' | 'teacher')[];
 };
 
 export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
@@ -17,14 +17,26 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
   useEffect(() => {
     const checkUserRole = async () => {
       if (user) {
-        const { data, error } = await supabase
-          .from('profiles')
+        // Check user_roles table for proper role management
+        const { data: roleData } = await supabase
+          .from('user_roles')
           .select('role')
-          .eq('id', user.id)
-          .single();
+          .eq('user_id', user.id)
+          .maybeSingle();
 
-        if (data && !error) {
-          setUserRole(data.role);
+        if (roleData) {
+          setUserRole(roleData.role);
+        } else {
+          // Fallback to profiles table for backward compatibility
+          const { data } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
+          if (data) {
+            setUserRole(data.role);
+          }
         }
       }
       setCheckingRole(false);

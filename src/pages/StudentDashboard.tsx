@@ -197,11 +197,15 @@ export default function StudentDashboard() {
                   <p className="text-sm text-muted-foreground">Watch educational videos</p>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto py-6 flex flex-col items-start gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 flex flex-col items-start gap-2"
+                onClick={() => navigate('/quizzes')}
+              >
                 <FileText className="h-8 w-8 text-success" />
                 <div className="text-left">
-                  <p className="font-semibold">My Notes</p>
-                  <p className="text-sm text-muted-foreground">View and edit your notes</p>
+                  <p className="font-semibold">Take Quizzes</p>
+                  <p className="text-sm text-muted-foreground">Test your knowledge</p>
                 </div>
               </Button>
             </div>

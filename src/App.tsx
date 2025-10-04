@@ -12,6 +12,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Courses from "./pages/Courses";
 import Books from "./pages/Books";
 import Videos from "./pages/Videos";
+import Quizzes from "./pages/Quizzes";
+import TakeQuiz from "./pages/TakeQuiz";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +65,22 @@ const App = () => (
               element={
                 <ProtectedRoute allowedRoles={['student', 'admin']}>
                   <Videos />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quizzes"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'admin', 'teacher']}>
+                  <Quizzes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz/:quizId"
+              element={
+                <ProtectedRoute allowedRoles={['student', 'admin', 'teacher']}>
+                  <TakeQuiz />
                 </ProtectedRoute>
               }
             />
