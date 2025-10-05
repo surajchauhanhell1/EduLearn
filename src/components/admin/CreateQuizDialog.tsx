@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/integrations/supabase/auth';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -43,6 +43,13 @@ export function CreateQuizDialog({
     { question: '', options: ['', '', '', ''], correct_answer: 0 }
   ]);
 
+  // Fetch contents when dialog opens or content type changes
+  useEffect(() => {
+    if (open) {
+      fetchContents(contentType);
+    }
+  }, [open, contentType]);
+
   const fetchContents = async (type: 'book' | 'video' | 'course') => {
     const tableName = type === 'book' ? 'books' : type === 'video' ? 'videos' : 'courses';
     const { data } = await supabase.from(tableName).select('id, title');
@@ -52,7 +59,6 @@ export function CreateQuizDialog({
   const handleContentTypeChange = (type: 'book' | 'video' | 'course') => {
     setContentType(type);
     setContentId('');
-    fetchContents(type);
   };
 
   const addQuestion = () => {
